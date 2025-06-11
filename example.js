@@ -3,11 +3,25 @@ const { Client, Location, Poll, List, Buttons, LocalAuth } = require('./index');
 const client = new Client({
     authStrategy: new LocalAuth(),
     // proxyAuthentication: { username: 'username', password: 'password' },
-    puppeteer: { 
+    puppeteer: {
         // args: ['--proxy-server=proxy-server-that-requires-authentication.example.com'],
         headless: false,
     }
 });
+
+// Allow sending messages only to a specific testing number
+const TEST_NUMBER = '573183495880';
+const ALLOWED_CHAT_ID = `${TEST_NUMBER}@c.us`;
+const originalSendMessage = client.sendMessage.bind(client);
+
+client.sendMessage = async (chatId, content, options = {}) => {
+    const normalized = chatId.replace(/@.*$/, '');
+    if (normalized !== TEST_NUMBER) {
+        console.log(`Message to ${chatId} blocked. Allowed number: ${ALLOWED_CHAT_ID}`);
+        return;
+    }
+    return originalSendMessage(ALLOWED_CHAT_ID, content, options);
+};
 
 // client initialize does not finish at ready now.
 client.initialize();
