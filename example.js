@@ -35,7 +35,8 @@ client.on('loading_screen', (percent, message) => {
 let pairingCodeRequested = false;
 client.on('qr', async (qr) => {
     // NOTE: This event will not be fired if a session is specified.
-    console.log('QR RECEIVED');
+    console.log('Escanea este QR con WhatsApp:');
+    console.log(qr);
     qrcode.generate(qr, {small: true});
 
     // paiuting code example
