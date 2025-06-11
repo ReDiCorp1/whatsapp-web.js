@@ -1,4 +1,5 @@
 const { Client, Location, Poll, List, Buttons, LocalAuth } = require('./index');
+const qrcode = require('qrcode-terminal');
 
 const client = new Client({
     authStrategy: new LocalAuth(),
@@ -34,7 +35,8 @@ client.on('loading_screen', (percent, message) => {
 let pairingCodeRequested = false;
 client.on('qr', async (qr) => {
     // NOTE: This event will not be fired if a session is specified.
-    console.log('QR RECEIVED', qr);
+    console.log('QR RECEIVED');
+    qrcode.generate(qr, {small: true});
 
     // paiuting code example
     const pairingCodeEnabled = false;
